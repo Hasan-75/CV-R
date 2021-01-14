@@ -37,8 +37,11 @@ public class UserManagerService {
     }
 
     public User login(User user) {
+
         User found = userRepository.findByEmail(user.getEmail());
+
         if (found == null) return found;
+
         if (found.getPassword().trim().equals(user.getPassword().trim())) return found;
         return null;
     }

@@ -12,6 +12,7 @@ public class BasicInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     @OneToOne
     private User user;
 

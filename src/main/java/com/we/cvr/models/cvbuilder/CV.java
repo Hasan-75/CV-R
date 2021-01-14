@@ -10,6 +10,7 @@ public class CV implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int cvID;
+
     @ManyToOne
     private User user;
 

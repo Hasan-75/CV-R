@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 @Entity(name = "UserTable")
 public class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int userID;

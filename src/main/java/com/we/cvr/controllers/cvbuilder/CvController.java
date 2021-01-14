@@ -60,6 +60,7 @@ public class CvController {
         User user = (User) request.getSession().getAttribute(Constants.USER_TAG);
         if (user == null)
             return "redirect:/login";
+
         model.addAttribute("basicInfo", basicInfoService.getBasicInfo(user));
         isProfileComplete(user, model);
         return Constants.CV_CREATE_BASIC_INFO_FORM;
@@ -107,6 +108,7 @@ public class CvController {
             profileInfo.setId(profileInfoService.getProfileInfo(user).getId());
         profileInfoService.addProfileInfo(profileInfo, user);
         model.addAttribute("profileInfo", profileInfoService.getProfileInfo(user));
+
         return "redirect:/cv/profile-info";
     }
 
@@ -136,6 +138,7 @@ public class CvController {
 
     @PostMapping("/cv/academic-info/{id}")
     public String createCvAcademicFormDelete(@ModelAttribute AcademicInfo academicInfo, @PathVariable int id, Model model, HttpServletRequest request) {
+
         User user = (User) request.getSession().getAttribute(Constants.USER_TAG);
         if (user == null)
             return "redirect:/login";
@@ -206,6 +209,20 @@ public class CvController {
     public void deleteCV(@PathVariable int userID, @PathVariable int cvID){
         cvManagerService.deleteCV(cvID, userID);
     }*/
+    @GetMapping({"/", "/welcome"})
+    public String welcome(Model model, HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute(Constants.USER_TAG);
+
+        if (user == null)
+            return "redirect:/login";
+
+        model.addAttribute(Constants.USER_TAG, user);
+        model.addAttribute("cvList", cvManagerService.getUsersCV(user.getUserID()));
+        model.addAttribute("templates", templateService.getAllTemplates());
+        isProfileComplete(user, model);
+        return Constants.DASHBOARD_PAGE;
+    }
 
     @GetMapping("/cv/choose-template")
     public String chooseTemplate(Model model, HttpServletRequest request) {
@@ -224,9 +241,12 @@ public class CvController {
             return "redirect:/login";
 
         Integer id = Integer.parseInt(request.getParameter("templateId"));
+
         CV cv = new CV();
+
         cv.setUser(user);
         cv.setTemplate(templateService.getTemplate(id));
+
         cv.setTitle(user.getName() + " " + Calendar.getInstance().getTimeInMillis());
         cvManagerService.addCV(cv, user.getUserID());
         //cvManagerService.addCV();
@@ -258,6 +278,7 @@ public class CvController {
         File file = Utils.generatePDF(cv, basicInfoService.getBasicInfo(user), profileInfoService.getProfileInfo(user),
                 academicInfoService.getAcademicInfo(user), careerInfoService.getCareerInfo(user)
                 );
+
         System.out.println(file==null);
         try {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));

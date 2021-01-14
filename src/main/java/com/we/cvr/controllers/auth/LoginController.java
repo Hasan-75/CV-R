@@ -3,6 +3,7 @@ package com.we.cvr.controllers.auth;
 import com.we.cvr.Constants;
 import com.we.cvr.models.auth.User;
 import com.we.cvr.services.cvbuilder.CvManagerService;
+import com.we.cvr.services.cvbuilder.TemplateService;
 import com.we.cvr.services.cvbuilder.UserManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,6 @@ public class LoginController {
     @Autowired
     UserManagerService userManagerService;
 
-    @Autowired
-    CvManagerService cvManagerService;
 
     @GetMapping("/login")
     public String login(Model model, HttpServletRequest request) {
@@ -31,16 +30,6 @@ public class LoginController {
         return Constants.LOGIN_PAGE;
     }
 
-    @GetMapping({"/", "/welcome"})
-    public String welcome(Model model, HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute(Constants.USER_TAG);
-        if (user == null)
-            return "redirect:/login";
-        System.out.println(cvManagerService.getUsersCV(user.getUserID()));
-        model.addAttribute(Constants.USER_TAG, user);
-        model.addAttribute("cvList", cvManagerService.getUsersCV(user.getUserID()));
-        return Constants.DASHBOARD_PAGE;
-    }
 
 
     @PostMapping("/login")
@@ -51,9 +40,11 @@ public class LoginController {
             model.addFlashAttribute("error", "Login failed");
             return "redirect:/login";
         }
+
         request.getSession().setAttribute("user", authenticatedUser);
+
         model.addAttribute("user", authenticatedUser);
-        System.out.println(((User)request.getSession().getAttribute("user")).getName());
+
         return "redirect:/welcome";
     }
 
