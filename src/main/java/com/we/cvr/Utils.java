@@ -150,6 +150,14 @@ public class Utils {
                 }
             }
 
+            content.beginText();
+            content.setFont(PDType1Font.HELVETICA, 10);
+            content.newLineAtOffset(200, tmpY);
+            content.showText(p);
+            content.endText();
+            p = "";
+            tmpY-=10;
+
             tmpY-=25;
            /* p = pi.getSkill();
             words = p.split(" ");
@@ -266,6 +274,13 @@ public class Utils {
                     tmpY-=10;
                 }
             }
+            content.beginText();
+            content.setFont(PDType1Font.HELVETICA, 10);
+            content.newLineAtOffset(200, tmpY);
+            content.showText(p);
+            content.endText();
+            p = "";
+            tmpY-=10;
 
             tmpY-=25;
 
